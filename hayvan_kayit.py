@@ -15,9 +15,28 @@ BASE_URL = f"https://api.airtable.com/v0/{BASE_ID}/{TABLE_NAME}"
 
 st.set_page_config(page_title="Hayvan Kayıt Sistemi", page_icon="🐾")
 
+# --- GÜVENLİK DUVARI ---
+if "giris_yapildi" not in st.session_state:
+    st.session_state.giris_yapildi = False
+
+if not st.session_state.giris_yapildi:
+    st.subheader("🔒 Güvenli Giriş")
+    # type="password" yazarken karakterleri nokta şeklinde gizler
+    girilen_sifre = st.text_input("Lütfen 6 haneli erişim şifresini girin:", type="password")
+    
+    if st.button("Giriş Yap"):
+        if girilen_sifre == "579103":  # Kendi belirlediğin 6 haneli şifreyi buraya yaz
+            st.session_state.giris_yapildi = True
+            st.rerun()  # Sayfayı yenileyip sistemi açar
+        else:
+            st.error("Hatalı şifre! Lütfen tekrar deneyin.")
+    
+    # Şifre doğru girilene kadar kodun geri kalanını (veritabanı bağlantılarını) durdurur
+    st.stop()  
+# -----------------------
+
 # Airtable'dan verileri canlı olarak çeken fonksiyon
 def verileri_getir():
-    # Görsel sırayı korumak için ?view=Grid%20view parametresi eklendi
     response = requests.get(BASE_URL + "?view=Grid%20view", headers=HEADERS)
     if response.status_code == 200:
         kayitlar = response.json().get('records', [])
@@ -84,15 +103,12 @@ elif secim == "Kayıtları Görüntüle":
         if arama:
             gosterilecek_df = gosterilecek_df[gosterilecek_df["İsim"].astype(str).str.contains(arama, case=False, na=False)]
         
-        # Gizli ID'yi çıkar
         gosterilecek_df = gosterilecek_df.drop(columns=["id"], errors="ignore")
         
-        # Sütunları mantıklı sıraya diz
         istenen_sira = ["İsim", "Tür", "Cinsiyet", "Aşı_Durumu", "Notlar"]
         mevcut_sutunlar = [col for col in istenen_sira if col in gosterilecek_df.columns]
         gosterilecek_df = gosterilecek_df[mevcut_sutunlar]
         
-        # Sıralama numaralarını 1'den başlat
         gosterilecek_df.index = range(1, len(gosterilecek_df) + 1)
         st.dataframe(gosterilecek_df, use_container_width=True)
 
@@ -130,7 +146,4 @@ elif secim == "Kayıt Düzenle":
                     
                     if st.form_submit_button("Değişiklikleri Kaydet"):
                         if not yeni_isim.strip():
-                            st.error("İsim boş bırakılamaz!")
-                        else:
-                            veri_guncelle(record_id, yeni_isim.strip(), yeni_tur, yeni_cinsiyet, yeni_asi, yeni_notlar)
-                            st.success(f"✅ {yeni_isim} bilgileri başarıyla güncellendi!")
+                            st.error("İsim boş bırakılam
