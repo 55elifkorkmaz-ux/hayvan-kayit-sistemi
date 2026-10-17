@@ -20,17 +20,15 @@ if "giris_yapildi" not in st.session_state:
 
 if not st.session_state.giris_yapildi:
     st.subheader("🔒 Güvenli Giriş")
-    # type="password" yazarken karakterleri nokta şeklinde gizler
     girilen_sifre = st.text_input("Lütfen 6 haneli erişim şifresini girin:", type="password")
     
     if st.button("Giriş Yap"):
-       if girilen_sifre == st.secrets["SISTEM_SIFRESI"]:  # Kendi belirlediğin 6 haneli şifreyi buraya yaz
+        if girilen_sifre == st.secrets["SISTEM_SIFRESI"]:
             st.session_state.giris_yapildi = True
-            st.rerun()  # Sayfayı yenileyip sistemi açar
+            st.rerun()
         else:
             st.error("Hatalı şifre! Lütfen tekrar deneyin.")
     
-    # Şifre doğru girilene kadar kodun geri kalanını (veritabanı bağlantılarını) durdurur
     st.stop()  
 # -----------------------
 
