@@ -24,7 +24,7 @@ if not st.session_state.giris_yapildi:
     girilen_sifre = st.text_input("Lütfen 6 haneli erişim şifresini girin:", type="password")
     
     if st.button("Giriş Yap"):
-       if girilen_sifre == st.secrets["SISTEM_SIFRESI"]::  # Kendi belirlediğin 6 haneli şifreyi buraya yaz
+       if girilen_sifre == st.secrets["SISTEM_SIFRESI"]:  # Kendi belirlediğin 6 haneli şifreyi buraya yaz
             st.session_state.giris_yapildi = True
             st.rerun()  # Sayfayı yenileyip sistemi açar
         else:
