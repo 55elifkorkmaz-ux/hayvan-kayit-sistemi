@@ -2,10 +2,9 @@ import streamlit as st
 import pandas as pd
 import requests
 
-# --- BULUT VERİTABANI AYARLARI ---
-AIRTABLE_PAT = "patXUITNrkOQB9zjX.2c2b9498057faf467e17fa47a825fb60590552367b57ee7da275ea9244015114"  # Buraya kendi PAT şifreni yaz
-BASE_ID = "appo6RBZ3yvo3SOqh"      # Buraya kendi Base ID'ni yaz
-TABLE_NAME = "tblDW7WjNTe1dgbs8"  # Buraya kendi Table ID'ni yaz
+AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
+BASE_ID = st.secrets["BASE_ID"]
+TABLE_NAME = st.secrets["TABLE_NAME"]
 
 HEADERS = {
     "Authorization": f"Bearer {AIRTABLE_PAT}",
@@ -25,7 +24,7 @@ if not st.session_state.giris_yapildi:
     girilen_sifre = st.text_input("Lütfen 6 haneli erişim şifresini girin:", type="password")
     
     if st.button("Giriş Yap"):
-        if girilen_sifre == "579103":  # Kendi belirlediğin 6 haneli şifreyi buraya yaz
+       if girilen_sifre == st.secrets["SISTEM_SIFRESI"]::  # Kendi belirlediğin 6 haneli şifreyi buraya yaz
             st.session_state.giris_yapildi = True
             st.rerun()  # Sayfayı yenileyip sistemi açar
         else:
