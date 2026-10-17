@@ -146,4 +146,4 @@ elif secim == "Kayıt Düzenle":
                     
                     if st.form_submit_button("Değişiklikleri Kaydet"):
                         if not yeni_isim.strip():
-                            st.error("İsim boş bırakılam
+                           st.error("İsim boş bırakılamaz!")
